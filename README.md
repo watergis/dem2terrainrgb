@@ -23,12 +23,13 @@ optional arguments:
   --dem DEM    Original DEM file. It must be already reprojected to EPSG:3857 before converting.
   --dist DIST  Output directory for tiles
   --tmp TMP    Temporary work directory
+  --webp       Use this option if you want to convert PNG to webp tiles
 ```
 
 The below is an example command. Before executing this module, you must reproject your DEM to EPSG:3857 coordinates by using GDAL or QGIS.
 ```
 pipenv shell
-python main.py --dem ./data/rwanda_dem_EPSG3857_10m.tif --dist ./tiles
+python main.py --dem ./data/rwanda_dem_EPSG3857_10m.tif --dist ./tiles --webp
 ```
 
 Finally, you can delete all of xml files under tiles folder.
@@ -139,6 +140,11 @@ You can use mb-util module to convert tilesets into a mbtiles container.
 $ mb-util --image_format=png --scheme=xyz ./tiles/ ./tilesets/rwanda_dem_EPSG3857_10m.mbtiles
 ```
 
+If you want to create mbtiles from webp tiles, the command should be like below.
+```
+$ mb-util --image_format=webp --scheme=xyz ./tiles/ ./tilesets/rwanda_dem_EPSG3857_10m_webp.mbtiles
+```
+
 Before running `mb-util`, don't forget to put `metadata.json` under `tiles` folder. The below is an example of content for `metadata.json`.
 
 ```json
@@ -156,7 +162,7 @@ You can upload tilesets to Github pages for hosting. If you would like to host t
 After installing `mbtileserver`,
 
 ```
-/go/bin/mbtileserver --verbose
+~/go/bin/mbtileserver --verbose
 ```
 
 it will automatically find mbtiles under `tilesets` folder, then access to [http://localhost:8000/services](http://localhost:8000/services). You will see the following response.

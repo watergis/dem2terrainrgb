@@ -1,6 +1,9 @@
 import subprocess
 import os
 import shutil
+import glob
+from PIL import Image
+from tqdm import tqdm
 
 
 class Dem2TerrainRgb(object):
@@ -98,7 +101,8 @@ class Dem2TerrainRgb(object):
 
   def gdal2tiles(self, rgbified_dem):
     """Generate tiles as PNG format.
-    
+    see about gdal2tiles:
+    https://gdal.org/programs/gdal2tiles.html
     Args:
         rgbified_dem (str): Rgbified DEM file path
 
@@ -119,3 +123,10 @@ class Dem2TerrainRgb(object):
     subprocess.check_output(cmd, shell=True)
     print(f"created tileset successfully: {self.dist}")
     return self.dist
+
+  def png2webp(self):
+    files = glob.glob(self.dist + '/**/*.png', recursive=True)
+    for file in tqdm(files):
+      img = Image.open(file)
+      img.save(file.replace('.png','.webp'), "WEBP", lossless=True)
+      os.remove(file)

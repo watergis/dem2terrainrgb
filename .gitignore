@@ -1,6 +1,8 @@
 tmp/
 data/
 tiles/
+tiles_*/
+tilesets/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
