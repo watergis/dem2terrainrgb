@@ -14,17 +14,19 @@ class Dem2TerrainRgb(object):
   https://github.com/syncpoint/terrain-rgb
   """
 
-  def __init__(self, dem, dist, tmp) -> None:
+  def __init__(self, dem, dist, tmp, zoom="5-15") -> None:
     """Constructor
 
     Args:
         dem (str): DEM file path. The DEM file must be reprojected to EPSG:3857 before converting.
-        dist ([type]): Output directory for terrain RGB tiles
-        tmp ([type]): Temporary directory for work
+        dist (str): Output directory for terrain RGB tiles
+        tmp (str): Temporary directory for work
+        zoom (str): Min and Max zoom levels for tiles. Default is 5-15.
     """
     self.dem = dem
     self.dist = dist
     self.tmp = tmp
+    self.zoom = zoom
 
   def fill_nodata(self):
     """
@@ -113,7 +115,7 @@ class Dem2TerrainRgb(object):
       shutil.rmtree(self.dist)
 
     cmd = f"gdal2tiles.py \
-          --zoom=5-15 \
+          --zoom={self.zoom} \
           --resampling=near \
           --tilesize=512 \
           --processes=8 \
@@ -124,9 +126,10 @@ class Dem2TerrainRgb(object):
     print(f"created tileset successfully: {self.dist}")
     return self.dist
 
-  def png2webp(self):
+  def png2webp(self, removePNG=False):
     files = glob.glob(self.dist + '/**/*.png', recursive=True)
     for file in tqdm(files):
       img = Image.open(file)
       img.save(file.replace('.png','.webp'), "WEBP", lossless=True)
-      os.remove(file)
+      if removePNG:
+        os.remove(file)

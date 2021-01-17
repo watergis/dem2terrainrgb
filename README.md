@@ -14,22 +14,24 @@ pipenv install
 
 ```
 $ python main.py -h
-usage: dem2terrainrgb.py --dem {dem file path} --dist {output directory path}
+usage: dem2terrainrgb.py --dem {dem file path} --dist {output directory path} --tmp {temporary directory path} --webp --remove_png --zoom {min-max zoom}
 
 This module is to convert DEM to terrain RGB raster tiles.
 
 optional arguments:
-  -h, --help   show this help message and exit
-  --dem DEM    Original DEM file. It must be already reprojected to EPSG:3857 before converting.
-  --dist DIST  Output directory for tiles
-  --tmp TMP    Temporary work directory
-  --webp       Use this option if you want to convert PNG to webp tiles
+  -h, --help    show this help message and exit
+  --dem DEM     Original DEM file. It must be already reprojected to EPSG:3857 before converting.
+  --dist DIST   Output directory for tiles
+  --tmp TMP     Temporary work directory
+  --webp        Use this option if you want to convert PNG to webp tiles
+  --remove_png  Use '--webp' option together. If this option is used, it will remove all of original PNG tiles.
+  --zoom ZOOM   Specify min-max zoom level for tiles. Default is 5-15.
 ```
 
 The below is an example command. Before executing this module, you must reproject your DEM to EPSG:3857 coordinates by using GDAL or QGIS.
 ```
 pipenv shell
-python main.py --dem ./data/rwanda_dem_EPSG3857_10m.tif --dist ./tiles --webp
+python main.py --dem ./data/rwanda_dem_EPSG3857_10m.tif --dist ./tiles --webp --zoom 5-15
 ```
 
 Finally, you can delete all of xml files under tiles folder.
